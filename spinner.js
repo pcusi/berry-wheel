@@ -71,17 +71,25 @@ function spin(d) {
 
     picked = Math.round(data.length - (rotation % 360) / ps);
     picked = picked >= data.length ? (picked % data.length) : picked;
+
+    if (oldpick.indexOf(picked) !== -1) {
+        d3.select(this).call(spin);
+        return;
+    } else {
+        oldpick.push(picked);
+    }
+
     rotation += 90 - Math.round(ps / 2);
     vis.transition()
-        .duration(3000)
+        .duration(4000)
         .attrTween("transform", rotTween)
         .each("end", function () {
             //mark question as seen
             d3.select(".slice:nth-child(" + (picked + 1) + ") path")
-                .attr("fill");
+                .attr("fill", "red");
             //populate question
             d3.select("#question h1")
-                .text('Tu reto es: '+data[picked].label);
+                .text('Tu reto es: ' + data[picked].label);
             oldrotation = rotation;
 
             /* Get the result value from object "data" */
@@ -108,7 +116,7 @@ container.append("text")
     .attr("x", 0)
     .attr("y", 15)
     .attr("text-anchor", "middle")
-    .text("SPIN")
+    .text("Girar")
     .style({ "font-weight": "bold", "font-size": "30px" });
 
 
